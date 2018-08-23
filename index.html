@@ -1,0 +1,106 @@
+<html>
+	<!-- Creator: Thomas Frank. Enhancer: Rushabh Wadkar -->
+<head>
+	<title>JSON Viewer</title>
+	<link rel="icon" href="./images/boy.png" type="image/x-icon" />
+	<link rel="stylesheet" href="./css/bt_min.css">
+	<link href='./css/roboto.css' rel='stylesheet'>
+	<link href='./css/mystyle.css' rel='stylesheet'>
+	<link href='./css/animate.css' rel='stylesheet'>
+	<link rel="stylesheet" href="./css/utility_min.css">
+	<script src="./js/jq_min.js"></script>
+	<script src="./js/pop_min.js"></script>
+	<script src="./js/bt_min.js"></script>
+	<script src="./js/bootstrap_notify.min.js"></script>
+	<script src="./js/myScript.js"></script>
+	<script src="./js/JSONeditor.js"></script>
+	<!--script src="./js/particle.min.js"></script> 
+	<script src="./js/stats.min.js"></script-->
+</head>
+<body>
+	<div id="particles-js" style="position: absolute; "></div>
+	<div class="container">
+	<nav class="navbar navbar-expand-lg navbar-light bg-light animated bounceInDown" id="myNav">
+		<a class="navbar-brand" id="header" href="#">JSON Viewer</a>
+		<a class="navbar-brand" href="#">
+			<img src="./images/boy.png" width="30" height="30" alt="">
+		</a>
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<ul class="navbar-nav mr-auto">
+				<!--li class="nav-item active">
+				<a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+				</li>
+				
+				<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				Settings
+				</a>
+				<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+					<a class="dropdown-item" href="#">src="./images/light-bulb-on.png"</a>
+					<a class="dropdown-item" href="#">Another action</a>
+					<div class="dropdown-divider"></div>
+					<a class="dropdown-item" href="#">Something else here</a>
+				</div>
+				</li-->
+			</ul>
+			<div class="nav-item" >
+					<a class="nav-link" style="cursor: pointer;">
+						<img id='reloadImg' class="item" onclick="reloadJSON()" data-toggle="tooltip" src="./images/reload.png" title="Clear"></img>
+					</a>
+			</div>
+			<div class="nav-item" >
+					<a class="nav-link" style="cursor: pointer;">
+						<img id='lightordarkimg' class="item" onclick="changeScheme()" src="./images/light-bulb-on.png" title=""></img>
+					</a>
+			</div>
+			<!--form class="form-inline my-2 my-lg-0">
+				<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+				<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+			</form-->
+		</div>
+	</nav>
+	<br>
+	  <div class="row">
+		<div class="col-sm col-sm-5 animated bounceInLeft" style="background-color: white; border-radius: 5px;">
+		  <div id="tree"></div>
+		</div>
+		<div class="col-sm col-sm-1">
+		  
+		</div>
+		<div class="col-sm col-sm-6 animated bounceInRight" style="position:fixed;right:0" data-spy="affix" data-offset-top="205">
+		  <div id="jform"></div>
+		</div>
+	  </div>
+	</div>
+</body>
+<script>
+	onload=function(){
+		JSONeditor.start('tree','jform',false,true)
+		Opera=(navigator.userAgent.toLowerCase().indexOf("opera")!=-1)
+		Safari=(navigator.userAgent.toLowerCase().indexOf("safari")!=-1)
+		Explorer=(document.all && (!(Opera || Safari)))
+		Explorer7=(Explorer && (navigator.userAgent.indexOf("MSIE 7.0")>=0))
+			
+		if(Explorer7 && location.href.indexOf("file:")!=0){prompt("This is just to get input boxes started in IE7 - who deems them unsecure.","I like input boxes...")}
+		
+		setDefaultParams();
+		console.log("JSON Viewer has loaded");
+	};
+	
+	$(document).ready(function(){
+		$('[data-toggle="tooltip"]').tooltip();   
+	});
+	
+	$(window).bind('keydown', function(event) {
+		if (event.ctrlKey || event.metaKey) {
+			switch (String.fromCharCode(event.which).toLowerCase()) {
+				case 's':
+					event.preventDefault();
+					treeBuilder.jsonChange(document.getElementById('jsonForm'));
+					break;
+			}
+		}
+	});
+	
+	</script>
+</html>

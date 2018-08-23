@@ -1,0 +1,187 @@
+<html>
+	<!-- Creator: Thomas Frank. Enhancer: Rushabh Wadkar -->
+<head>
+	<title>JSON Mint - The JSON Validator</title>
+	<link rel="icon" href="./images/boy.png" type="image/x-icon" />
+	<link rel="stylesheet" href="./css/bt_min.css">
+	<link href='./css/roboto.css' rel='stylesheet'>
+	<link href='./css/mystyle.css' rel='stylesheet'>
+	<link href='./css/animate.css' rel='stylesheet'>
+	<link rel="stylesheet" href="./css/utility_min.css">
+	<script src="./js/jq_min.js"></script>
+	<script src="./js/pop_min.js"></script>
+	<script src="./js/bt_min.js"></script>
+	<script src="./js/bootstrap_notify.min.js"></script>
+	<script src="./js/myScript.js"></script>
+	<script src="./js/JSONeditor.js"></script>
+	<link rel="stylesheet" type="text/css" href="./css/cm.css">
+	<script type="text/javascript" src="./js/cm.js"></script>
+	<script type="text/javascript" src="./js/jm.js"></script>
+	<script type="text/javascript" src="./js/fm.js"></script>
+	<!--script src="./js/particle.min.js"></script> 
+	<script src="./js/stats.min.js"></script-->
+	<style type="text/css">
+	  .CodeMirror {
+			border-top: 1px solid black; 
+			border-bottom: 1px solid black;
+			border: 1px solid #b2b2b2;
+			font-size: 0.75em;
+			font-style: 'Roboto', Tahoma;
+		}
+	</style>
+</head>
+<body>
+	<div id="particles-js" style="position: absolute; "></div>
+	<div class="container">
+	<nav class="navbar navbar-expand-lg navbar-light bg-light animated bounceInDown" id="myNav">
+		<a class="navbar-brand" id="header" href="#">JSON Mint</a>
+		<a class="navbar-brand" href="#">
+			<img src="./images/boy.png" width="30" height="30" alt="">
+		</a>
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<ul class="navbar-nav mr-auto">
+				<!--li class="nav-item active">
+				<a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+				</li>
+				
+				<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				Settings
+				</a>
+				<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+					<a class="dropdown-item" href="#">src="./images/light-bulb-on.png"</a>
+					<a class="dropdown-item" href="#">Another action</a>
+					<div class="dropdown-divider"></div>
+					<a class="dropdown-item" href="#">Something else here</a>
+				</div>
+				</li-->
+			</ul>
+			<div class="nav-item" >
+					<a class="nav-link" style="cursor: pointer;">
+						<img id='reloadImg' class="item" onclick="reloadJSON()" data-toggle="tooltip" src="./images/reload.png" title="Clear"></img>
+					</a>
+			</div>
+			<div class="nav-item" >
+					<a class="nav-link" style="cursor: pointer;">
+						<img id='lightordarkimg' class="item" onclick="changeScheme()" src="./images/light-bulb-on.png" title=""></img>
+					</a>
+			</div>
+			<!--form class="form-inline my-2 my-lg-0">
+				<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+				<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+			</form-->
+		</div>
+	</nav>
+	<br>
+		<div class="row" style="font-size: 10px; padding: 5px; font-family: 'Roboto'; background-color: rgba(0,0,0,0.05)">
+			<div class="col-sm col-sm-9">
+				JSONMint is a validator and reformatter for JSON, a lightweight data-interchange format. <br>Copy and paste, directly type, or input a URL in the editor above and let JSONMint tidy and validate your messy JSON code.
+			</div>
+		</div>
+		<br>
+	  <div class="row">
+		<div class="col-sm col-sm-12">
+			<textarea id="inp" class="codemirror-textarea"></textarea>
+		</div>
+	  </div>
+	  <br>
+	  <div class="row">
+		<div class="col-sm col-sm-12">
+			<button type="button" class="btn btn-success btn-sm" onclick="validate()">Validate</button>
+			<button type="button" class="btn btn-light btn-sm" onclick="reset()">Reset</button>
+		</div>
+	  </div>
+	  <br>
+	  <div class="row" id="resParent" style="display: none;background-color: rgba(0,0,0,0.1); padding: 15px;">
+		<div class="col-sm col-sm-12">
+			<div id="res"></div>
+		</div>
+	  </div>
+	</div>
+	<script>
+		var code = $(".codemirror-textarea")[0];
+		editor = CodeMirror.fromTextArea(code, {
+			mode: "application/json",
+			styleActiveLine: true,
+			lineNumbers: true,
+			lineWrapping: true,
+			tabSize: 5
+		});
+		function reset(){
+			var j = editor.getValue();
+			if(j){
+				editor.setValue("");
+				document.getElementById('resParent').style.display = 'none';
+			} else {
+				$.notify({
+					//title: '<strong>Heads up!</strong>',
+						message: 'Nothing to clear, Boss! Please take a walk.'
+					}, {
+					allow_dismiss: true,
+					type: "warning",
+					z_index: 1031,
+					animate: {
+						enter: 'animated fadeInRight',
+						exit: 'animated fadeOutRight'
+					}
+				});
+			}
+		}
+		function jumpToLine(i) { 
+			var t = editor.charCoords({line: i, ch: 0}, "local").top; 
+			var middleHeight = editor.getScrollerElement().offsetHeight / 2; 
+			editor.scrollTo(null, t - middleHeight - 5); 
+		} 
+		function validate(){
+			var codeTextArea = document.getElementById('inp');
+			var resultId = document.getElementById('resParent');
+			var res = document.getElementById('res');
+			console.warn("Now.. Validating JSON");
+			var json = editor.getValue();
+			if(json){
+				try {
+					var op = jsonlint.parse(json);
+					resultId.style.display = 'block';
+					//editor.setValue(JSON.parse(JSON.stringify(op, undefined, 4)));
+					editor.innerText = op;
+					console.log(JSON.stringify(op,undefined,10));
+					resultId.style.backgroundColor = "rgb(198, 216, 128)";
+					res.innerText = "Result: Valid JSON!";
+				}catch(e){
+					resultId.style.display = 'block';
+					resultId.style.backgroundColor = "#ffb2b2";
+					res.innerText = "Result: " + e;
+					var pattern = new RegExp("line \\d*");
+					var lineNumber = Number(pattern.exec(e)[0].split(" ")[1]);
+					jumpToLine(lineNumber);
+						$.notify({
+						//title: '<strong>Heads up!</strong>',
+							message: 'Error at ' + lineNumber
+						}, {
+						allow_dismiss: true,
+						type: "warning",
+						z_index: 1031,
+						animate: {
+							enter: 'animated fadeInRight',
+							exit: 'animated fadeOutRight'
+						}
+					});
+				}
+			} else {
+				$.notify({
+					//title: '<strong>Heads up!</strong>',
+						message: 'Nothing to validate, Boss! Please take a walk.'
+					}, {
+					allow_dismiss: true,
+					type: "warning",
+					z_index: 1031,
+					animate: {
+						enter: 'animated fadeInRight',
+						exit: 'animated fadeOutRight'
+					}
+				});
+			}
+		}
+	</script>
+</body>
+</html>
